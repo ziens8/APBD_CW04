@@ -255,7 +255,14 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie13_GrupowanieZapisowWedlugPrzedmiotu()
     {
-        throw Niezaimplementowano(nameof(Zadanie13_GrupowanieZapisowWedlugPrzedmiotu));
+        var wynik = DaneUczelni.Zapisy
+            .Join(DaneUczelni.Przedmioty,
+                z => z.PrzedmiotId,
+                p => p.Id,
+                (z, p) => $"{p.Nazwa}")
+            .GroupBy(s => s)
+            .Select(g => $"{g.Key} {g.Count()}");
+        return wynik;
     }
 
     /// <summary>
@@ -272,7 +279,15 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie14_SredniaOcenaNaPrzedmiot()
     {
-        throw Niezaimplementowano(nameof(Zadanie14_SredniaOcenaNaPrzedmiot));
+        var wynik = DaneUczelni.Zapisy
+            .Join(DaneUczelni.Przedmioty,
+                z => z.PrzedmiotId,
+                p => p.Id,
+                (z, p) => new { p.Nazwa, z.OcenaKoncowa })
+            .GroupBy(x => x.Nazwa)
+            .Select(g => $"{g.Key} {g.Average(x => x.OcenaKoncowa)}");
+
+        return wynik;
     }
 
     /// <summary>
@@ -288,7 +303,13 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie15_ProwadzacyILiczbaPrzedmiotow()
     {
-        throw Niezaimplementowano(nameof(Zadanie15_ProwadzacyILiczbaPrzedmiotow));
+        var wynik = DaneUczelni.Prowadzacy
+            .GroupJoin(DaneUczelni.Przedmioty,
+                pr => pr.Id,
+                p => p.ProwadzacyId,
+                (pr, przedmioty) => $"{pr.Imie} {pr.Nazwisko} {przedmioty.Count()}");
+
+        return wynik;
     }
 
     /// <summary>
@@ -305,7 +326,16 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie16_NajwyzszaOcenaKazdegoStudenta()
     {
-        throw Niezaimplementowano(nameof(Zadanie16_NajwyzszaOcenaKazdegoStudenta));
+        var wynik = DaneUczelni.Studenci
+            .Join(DaneUczelni.Zapisy,
+                s => s.Id,
+                z => z.StudentId,
+                (s, z) => new { s.Imie, s.Nazwisko, z.OcenaKoncowa })
+            .Where(x => x.OcenaKoncowa != null)
+            .GroupBy(x => new { x.Imie, x.Nazwisko })
+            .Select(g => $"{g.Key.Imie} {g.Key.Nazwisko} {g.Max(x => x.OcenaKoncowa)}");
+
+        return wynik;
     }
 
     /// <summary>
