@@ -1,10 +1,11 @@
 using LinqConsoleLab.PL.Data;
+using LinqConsoleLab.PL.Models;
 
 namespace LinqConsoleLab.PL.Exercises;
 
 public sealed class ZadaniaLinq
 {
-    /// <summary>
+    
     /// Zadanie:
     /// Wyszukaj wszystkich studentów mieszkających w Warsaw.
     /// Zwróć numer indeksu, pełne imię i nazwisko oraz miasto.
@@ -13,10 +14,14 @@ public sealed class ZadaniaLinq
     /// SELECT NumerIndeksu, Imie, Nazwisko, Miasto
     /// FROM Studenci
     /// WHERE Miasto = 'Warsaw';
-    /// </summary>
+    
+    
     public IEnumerable<string> Zadanie01_StudenciZWarszawy()
     {
-        throw Niezaimplementowano(nameof(Zadanie01_StudenciZWarszawy));
+        var wynik = DaneUczelni.Studenci
+            .Where(s => s.Miasto == "Warsaw")
+            .Select(s => $"{s.NumerIndeksu} {s.Imie} {s.Nazwisko} {s.Miasto}");
+        return wynik;
     }
 
     /// <summary>
@@ -30,7 +35,9 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie02_AdresyEmailStudentow()
     {
-        throw Niezaimplementowano(nameof(Zadanie02_AdresyEmailStudentow));
+        var wynik = DaneUczelni.Studenci
+            .Select(s => $"{s.Email}");
+        return wynik;
     }
 
     /// <summary>
@@ -45,7 +52,11 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie03_StudenciPosortowani()
     {
-        throw Niezaimplementowano(nameof(Zadanie03_StudenciPosortowani));
+        var wynik = DaneUczelni.Studenci
+            .OrderBy(s => s.Nazwisko)
+            .ThenBy(s => s.Imie)
+            .Select(s => s.NumerIndeksu + " " + s.Imie + " " + s.Nazwisko);
+        return wynik;
     }
 
     /// <summary>
@@ -60,7 +71,12 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie04_PierwszyPrzedmiotAnalityczny()
     {
-        throw Niezaimplementowano(nameof(Zadanie04_PierwszyPrzedmiotAnalityczny));
+        var wynik = DaneUczelni.Przedmioty
+            .Where(s => s.Kategoria == "Analytics")
+            .Select(s => s.Nazwa + " " + s.DataStartu)
+            .FirstOrDefault() ?? "Brak przedmiotu w Analytics";
+            
+        return new []{wynik};
     }
 
     /// <summary>
@@ -77,7 +93,9 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie05_CzyIstniejeNieaktywneZapisanie()
     {
-        throw Niezaimplementowano(nameof(Zadanie05_CzyIstniejeNieaktywneZapisanie));
+        var wynik = DaneUczelni.Zapisy
+            .Any(s => s.CzyAktywny == false);
+        return new[] { wynik ? "tak" : "nie" };
     }
 
     /// <summary>
